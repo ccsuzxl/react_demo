@@ -1,5 +1,6 @@
 import React from 'react';
-// import './App.css';
+import './demos/webuploader.css';
+import './App.css';
 import Home from './Home'
 import { BrowserRouter } from 'react-router-dom'
 

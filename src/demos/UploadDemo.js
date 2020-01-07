@@ -1,5 +1,6 @@
 import React from 'react'
 import { Upload, Icon, Modal } from 'antd';
+import axios from 'axios'
 
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
@@ -30,18 +31,6 @@ class UploadDemo extends React.Component {
       {
         uid: '-3',
         name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-      {
-        uid: '-4',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-      {
-        uid: '-5',
-        name: 'image.png',
         status: 'error',
       },
     ],
@@ -61,6 +50,45 @@ class UploadDemo extends React.Component {
   };
 
   handleChange = ({ fileList }) => this.setState({ fileList });
+  handleCustomRequest = ({
+    action,
+    data,
+    file,
+    filename,
+    headers,
+    onError,
+    onProgress,
+    onSuccess,
+    withCredentials,
+  }) => {
+    // EXAMPLE: post form-data with 'axios'
+    const formData = new FormData();
+    if (data) {
+      Object.keys(data).forEach(key => {
+        formData.append(key, data[key]);
+      });
+    }
+    formData.append(filename, file);
+
+    axios
+      .post(action, formData, {
+        withCredentials,
+        headers,
+        onUploadProgress: ({ total, loaded }) => {
+          onProgress({ percent: Math.round(loaded / total * 100).toFixed(2) * 1 }, file);
+        },
+      })
+      .then(({ data: response }) => {
+        onSuccess(response, file);
+      })
+      .catch(onError);
+
+    return {
+      abort () {
+        console.log('upload progress is aborted.');
+      },
+    };
+  }
 
   render () {
     const { previewVisible, previewImage, fileList } = this.state;
@@ -78,6 +106,8 @@ class UploadDemo extends React.Component {
           fileList={fileList}
           onPreview={this.handlePreview}
           onChange={this.handleChange}
+          customRequest={this.handleCustomRequest}
+          multiple={true}
         >
           {fileList.length >= 8 ? null : uploadButton}
         </Upload>

@@ -4,6 +4,7 @@ import Cards from './Cards';
 import Welcome from './Welcome';
 import EmptyDemo from './EmptyDemo';
 import UploadDemo from './UploadDemo';
+import Uploader from './Uploader';
 
 
 class RouterList extends React.Component {
@@ -14,6 +15,7 @@ class RouterList extends React.Component {
           <Route path="/Cards" component={Cards}></Route>
           <Route path="/EmptyDemo" component={EmptyDemo}></Route>
           <Route path="/UploadDemo" component={UploadDemo}></Route>
+          <Route path="/Uploader" component={Uploader}></Route>
           <Route path="/" component={Welcome}></Route>
         </Switch>
       </div>
